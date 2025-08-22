@@ -38,7 +38,7 @@ This is a mini analysis carried out on a Brazilian E-commerce store to practice 
    - Number of Sellers: 3,033
    -  Number of Distinct Orders: 97,256
    -  Number of Items Sold: 111,023
-   -  Number of Products Categories: 77
+   -  Number of Products Categories: 71
   
        ```sql
          select count(distinct seller_id), 
