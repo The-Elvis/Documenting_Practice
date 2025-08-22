@@ -12,9 +12,9 @@ This is a mini analysis carried out on a Brazilian E-commerce store to practice 
 
 - Analyze revenue distribution across product categories.
 
-- Investigate customer repeat purchase behavior.
+- Investigate customer repeat purchase behavior(Later).
 
-- Track revenue growth patterns over time.
+- Track revenue growth patterns over time(Later).
 
 ## Dataset and Source
 
@@ -23,9 +23,9 @@ This is a mini analysis carried out on a Brazilian E-commerce store to practice 
 - **Source:** [Kaggle -- Olist E-Commerce Dataset](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)
 
 - **Description:**
-  - Covers orders placed from 4th September 2016 to 17th October 2018
+  - Covers orders placed from 4th September 2016 to 17th October 2018.
   - Includes 97k+ Orders With details on customers, sellers, product category, payments, reviews and delivery perfomance.
-  - Multiple tables are related by order_id, customer_id, product_id and seller_id
+  - Multiple tables are related by order_id, customer_id, product_id and seller_id.
  
 ## Tools Used
 
@@ -85,7 +85,7 @@ This is a mini analysis carried out on a Brazilian E-commerce store to practice 
 
    - **Top 100 Sellers:**
 
-   The top 100 contributed 45.37% of the total revenue. From this analysis, we see that even the top 100 sellers do not make up half of the revenue. Out of 3,033 sellers,       2,933 account for 55%. This shows that the store's sales revenue is spread out meaning, if one top seller leaves, the impact on revenue will be limited. It highlights        that the long tail of smaller sellers is really the back bone here. Supporting these smaller sellers, for example, by increasing their visibility, will go a long way in      boosting overall revenue.
+   The top 100 contributed 45.37% of the total revenue. From this analysis, we see that even the top 100 sellers do not make up half of the revenue. Out of 3,033 sellers,       2,933 account for 55%. This shows that the store's sales revenue is spread out meaning, if one top seller leaves, the impact on revenue will be limited. It highlights       that the long tail of smaller sellers is really the back bone here. Supporting these smaller sellers, for example, by increasing their visibility, will go a long way 		in boosting overall revenue.
 
    ```sql
    select sum(sales_revenue) total_top100_rev
@@ -103,3 +103,20 @@ This is a mini analysis carried out on a Brazilian E-commerce store to practice 
   from order_items2;
   ```
    
+And to further cement the above insight, I carried out a cumulative revenue calculation by seller using window function, attached below is the query.
+
+```sql
+	select seller_id,
+	   sum(price) total_revenue,
+	   sum(sum(price)) over (order by sum(price) desc) cumulative_revenue,
+	   round(
+	   		sum(sum(price)) over (order by sum(price) desc)
+	   		/sum(sum(price)) over() * 100, 2
+	   		) as cumulative_pct
+	from order_items2
+	group by seller_id
+	order by 2 desc;
+```
+
+This allowed me to rank the sellers by revenue contribution and compute the cumulative share across all 3,033 sellers.
+
